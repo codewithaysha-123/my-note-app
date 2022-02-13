@@ -1,0 +1,6 @@
+<root>
+    <item
+        name='android.content.ContentProvider int update(android.net.Uri, android.content.ContentValues, java.lang.String, java.lang.String[]) 1'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

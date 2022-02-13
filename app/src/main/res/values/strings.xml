@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Note App</string>
+    <string name="add_notes">add notes</string>
+    <string name="title">Title</string>
+    <string name="notes">Notes</string>
+    <string name="date">Date</string>
+    <string name="edit_title">Title:</string>
+    <string name="pin_unpin">Pin/Unpin</string>
+    <string name="delete">Delete</string>
+</resources>
