@@ -7,4 +7,5 @@
     <string name="edit_title">Title:</string>
     <string name="pin_unpin">Pin/Unpin</string>
     <string name="delete">Delete</string>
+    <string name="add_a_note">Add a note</string>
 </resources>
