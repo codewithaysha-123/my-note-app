@@ -48,20 +48,26 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         updateRecycler(notes);
 
-        fab_add.setOnClickListener(this::onClick);
-
-        searchView_home.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        fab_add.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filter(newText);
-                return true;
+            public void onClick(View v) {
+               Intent intent = new Intent(MainActivity.this,NotesTakerActivity.class);
+               startActivityForResult(intent,101);
             }
         });
+
+        searchView_home.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        filter(newText);
+                        return true;
+                    }
+                });
 
     }
 
@@ -130,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         popupMenu.inflate(R.menu.popup_menu);
         popupMenu.show();
     }
+
 
     private void onClick(View v) {
         Intent intent = new Intent(MainActivity.this, NotesTakerActivity.class);
