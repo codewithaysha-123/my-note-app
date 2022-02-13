@@ -19,9 +19,7 @@ public interface MainDAO {
     void insert(Notes notes);
 
     @Query("SELECT * FROM notes ORDER BY id DESC")
-    default List<Notes> getAll() {
-        return null;
-    }
+    List<Notes> getAll();
 
     @Query("UPDATE notes SET title = :title, notes = :notes WHERE ID = :id")
     void update(int id,String title,String notes);
