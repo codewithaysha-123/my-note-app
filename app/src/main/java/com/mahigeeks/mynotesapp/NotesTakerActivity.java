@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -42,32 +41,29 @@ public class NotesTakerActivity extends AppCompatActivity {
         }
 
 
-        imageView_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String title = editText_title.getText().toString();
-                String description = editText_notes.getText().toString();
+        imageView_save.setOnClickListener(v -> {
+            String title = editText_title.getText().toString();
+            String description = editText_notes.getText().toString();
 
-                if (description.isEmpty()){
-                    Toast.makeText(NotesTakerActivity.this,"Please add some notes",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss a");
-                Date date = new Date();
-
-                if (!isOldNote){
-                    notes = new Notes();
-                }
-
-                notes.setTitle(title);
-                notes.setDate(description);
-                notes.setDate(formatter.format(date));
-
-                Intent intent = new Intent();
-                intent.putExtra("note",notes);
-                setResult(Activity.RESULT_OK,intent);
-                finish();
+            if (description.isEmpty()){
+                Toast.makeText(NotesTakerActivity.this,"Please add some notes",Toast.LENGTH_SHORT).show();
+                return;
             }
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss a");
+            Date date = new Date();
+
+            if (!isOldNote){
+                notes = new Notes();
+            }
+
+            notes.setTitle(title);
+            notes.setDate(description);
+            notes.setDate(formatter.format(date));
+
+            Intent intent = new Intent();
+            intent.putExtra("note",notes);
+            setResult(Activity.RESULT_OK,intent);
+            finish();
         });
     }
 }
