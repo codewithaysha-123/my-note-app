@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -48,26 +47,23 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         updateRecycler(notes);
 
-        fab_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               Intent intent = new Intent(MainActivity.this,NotesTakerActivity.class);
-               startActivityForResult(intent,101);
-            }
+        fab_add.setOnClickListener(v -> {
+           Intent intent = new Intent(MainActivity.this,NotesTakerActivity.class);
+           startActivityForResult(intent,101);
         });
 
         searchView_home.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
                         return true;
                     }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        filter(newText);
-                        return true;
-                    }
-                });
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            filter(newText);
+            return true;
+        }
+        });
 
     }
 
@@ -136,13 +132,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         popupMenu.inflate(R.menu.popup_menu);
         popupMenu.show();
     }
-
-
-    private void onClick(View v) {
-        Intent intent = new Intent(MainActivity.this, NotesTakerActivity.class);
-        startActivityForResult(intent, 101);
-    }
-
 
     @SuppressLint({"NotifyDataSetChanged", "NonConstantResourceId"})
     @Override
