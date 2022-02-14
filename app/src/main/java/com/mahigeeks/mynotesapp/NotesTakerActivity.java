@@ -32,7 +32,7 @@ public class NotesTakerActivity extends AppCompatActivity {
 
         notes = new Notes();
         try {
-            notes = (Notes) getIntent().getSerializableExtra("old_name");
+            notes = (Notes) getIntent().getSerializableExtra("old_note");
             editText_title.setText(notes.getTitle());
             editText_notes.setText(notes.getNotes());
             isOldNote = true;
