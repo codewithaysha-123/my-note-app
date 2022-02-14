@@ -60,7 +60,7 @@ public class NotesTakerActivity extends AppCompatActivity {
                 }
 
                 notes.setTitle(title);
-                notes.setDate(description);
+                notes.setNotes(description);
                 notes.setDate(formatter.format(date));
 
                 Intent intent = new Intent();
