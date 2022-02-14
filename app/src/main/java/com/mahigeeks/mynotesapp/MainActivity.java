@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     private void showPopup(CardView cardView) {
         PopupMenu popupMenu = new PopupMenu(this,cardView);
+        popupMenu.setOnMenuItemClickListener(this);
         popupMenu.inflate(R.menu.popup_menu);
         popupMenu.show();
     }
