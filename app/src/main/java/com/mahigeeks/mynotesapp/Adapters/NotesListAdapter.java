@@ -85,7 +85,6 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesViewHolder>{
 
     @Override
     public int getItemCount() {
-        //The first error if the list is null. So please add null check for array when you're using listview/recycler view
         return list == null ? 0 : list.size();
     }
 
