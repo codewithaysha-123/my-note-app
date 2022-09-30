@@ -38,9 +38,9 @@
         android:padding="8dp"
         android:singleLine="true"
         android:textColor="@color/teal_700"
-        android:textColorHighlight="#FBFAFA"
         android:textColorHint="@color/teal_700"
-        android:textColorLink="#FBFAFA"
+        android:backgroundTint="@color/white"
+        android:textCursorDrawable="@null"
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="visible" />
@@ -52,9 +52,9 @@
         android:hint="Add Note:"
         android:padding="8dp"
         android:textColor="@color/teal_500"
-        android:textColorHighlight="#FBFAFA"
         android:textColorHint="@color/teal_500"
-        android:textColorLink="#FBFAFA"
+        android:backgroundTint="@color/white"
+        android:textCursorDrawable="@null"
         android:textSize="18sp"
         android:textStyle="normal" />
 
