@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">My Note App</string>
-    <string name="add_notes">add notes</string>
     <string name="title">Title</string>
     <string name="notes">Notes</string>
     <string name="date">Date</string>

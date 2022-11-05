@@ -9,9 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="teal_700">#0A5750</color>
 
-    <color name="Color1">#C61E12</color>
-    <color name="Color2">#ED18FD</color>
-    <color name="Color3">#E62F69</color>
-    <color name="Color4">#76CB13</color>
-    <color name="Color5">#F1960F</color>
+    <color name="Color1">#DF9AEB</color>
+    <color name="Color2">#07D9F4</color>
+    <color name="Color3">#FBE205</color>
+    <color name="Color4">#88FA04</color>
+    <color name="Color5">#FF9800</color>
 </resources>
