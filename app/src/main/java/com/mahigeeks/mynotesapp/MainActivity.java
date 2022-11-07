@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
-    private FrameLayout adContainerView;
     private AdView adView;
     RecyclerView recyclerView;
     NotesListAdapter notesListAdapter;
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         });
 
-        adContainerView = findViewById(R.id.adView_container);
+        FrameLayout adContainerView = findViewById(R.id.adView_container);
         adView = new AdView(this);
         adContainerView.addView(adView);
         adView.setAdUnitId("ca-app-pub-4564322810200655~9333750026");
