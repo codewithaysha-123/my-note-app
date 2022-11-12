@@ -4,26 +4,30 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.PopupMenu;
-import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mahigeeks.mynotesapp.Adapters.NotesListAdapter;
 import com.mahigeeks.mynotesapp.Database.RoomDB;
@@ -33,74 +37,97 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
-    private AdView adView;
     RecyclerView recyclerView;
     NotesListAdapter notesListAdapter;
     List<Notes> notes = new ArrayList<>();
     RoomDB database;
     FloatingActionButton fab_add;
-    SearchView searchView_home;
+    androidx.appcompat.widget.SearchView searchView;
     Notes selectedNote;
+    InterstitialAd mInterstitialAd;
 
-    private AdSize getAdSize() {
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-
-        float widthPixels = outMetrics.widthPixels;
-        float density = outMetrics.density;
-
-        int adWidth = (int) (widthPixels/density);
-
-        return  AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this,adWidth);
-    }
-
-    private void loadBanner(){
-        List <String> testDevices = new ArrayList<>();
-        testDevices.add(AdRequest.DEVICE_ID_EMULATOR);
-
-                RequestConfiguration requestConfiguration = new RequestConfiguration.Builder()
-                        .setTestDeviceIds(testDevices)
-                .build();
-
-        MobileAds.setRequestConfiguration(requestConfiguration);
-
-        AdSize adSize = getAdSize();
-        adView.setAdSize(adSize);
-        adView.loadAd(new AdRequest.Builder().build());
-    }
-
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        searchView = findViewById(R.id.searchView_home);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            updateRecycler(notes);
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
 
         MobileAds.initialize(this, initializationStatus -> {
 
         });
 
-        FrameLayout adContainerView = findViewById(R.id.adView_container);
-        adView = new AdView(this);
-        adContainerView.addView(adView);
-        adView.setAdUnitId("ca-app-pub-4564322810200655~9333750026");
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
-        loadBanner();
+        InterstitialAd.load(this, getString(R.string.Inter_ad_id), adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                Log.e("Error",loadAdError.toString());
+            }
+
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                super.onAdLoaded(interstitialAd);
+                mInterstitialAd = interstitialAd;
+                mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                    @Override
+                    public void onAdClicked() {
+                        super.onAdClicked();
+                    }
+
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        super.onAdDismissedFullScreenContent();
+                    }
+
+                    @Override
+                    public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                        super.onAdFailedToShowFullScreenContent(adError);
+                    }
+
+                    @Override
+                    public void onAdImpression() {
+                        super.onAdImpression();
+                    }
+
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        super.onAdShowedFullScreenContent();
+                    }
+                });
+            }
+        });
+
+        new Handler().postDelayed(() -> {
+            if (mInterstitialAd!=null)
+            mInterstitialAd.show(MainActivity.this);
+            else
+                Log.e("AdPending","Ad is not ready yet!");
+        },10000);
 
         recyclerView = findViewById(R.id.recycler_home);
         fab_add = findViewById(R.id.fab_add);
-        searchView_home = findViewById(R.id.searchView_home);
+        searchView = findViewById(R.id.searchView_home);
 
         database = RoomDB.getInstance(this);
         notes = database.mainDAO().getAll();
-
-        updateRecycler(notes);
 
         fab_add.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this,NotesTakerActivity.class);
             startActivityForResult(intent,101);
         });
 
-        searchView_home.setOnQueryTextListener(new SearchView.OnQueryTextListener()  {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -112,13 +139,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             }
         });
+
     }
 
     private void filter(String newText) {
         List<Notes> filteredList = new ArrayList<>();
         for (Notes singleNote : notes){
             if (singleNote.getTitle().toLowerCase().contains(newText.toLowerCase())
-            || singleNote.getNotes().toLowerCase().contains(newText.toLowerCase())){
+                    || singleNote.getNotes().toLowerCase().contains(newText.toLowerCase())){
                 filteredList.add(singleNote);
             }
         }
@@ -176,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     private void showPopup(CardView cardView) {
         PopupMenu popupMenu = new PopupMenu(this,cardView);
-        popupMenu.setOnMenuItemClickListener(this);
         popupMenu.inflate(R.menu.popup_menu);
         popupMenu.show();
     }

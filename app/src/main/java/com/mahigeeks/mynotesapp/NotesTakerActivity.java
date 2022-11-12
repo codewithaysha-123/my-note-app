@@ -2,6 +2,9 @@ package com.mahigeeks.mynotesapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +21,7 @@ import java.util.Date;
 
 public class NotesTakerActivity extends AppCompatActivity{
     EditText editText_title, editText_notes;
-    ImageView imageView_save;
+    ImageView imageView_save,imageButton_share,imageButton_copy;
     Notes notes;
     boolean isOldNote = false;
 
@@ -30,6 +33,25 @@ public class NotesTakerActivity extends AppCompatActivity{
         imageView_save = findViewById(R.id.imageView_save);
         editText_title = findViewById(R.id.editText_title);
         editText_notes = findViewById(R.id.editText_notes);
+        imageButton_share = findViewById(R.id.imageButton_share);
+        imageButton_copy = findViewById(R.id.imageButton_copy);
+
+        imageButton_share.setOnClickListener(view -> {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, editText_title.getText().toString() + editText_notes.getText().toString());
+            shareIntent.setType("text/plain");
+            shareIntent = Intent.createChooser(shareIntent,"Share via:");
+            startActivity(shareIntent);
+        });
+
+        imageButton_copy.setOnClickListener(view -> {
+            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData data = (ClipData) ClipData.newPlainText("text",editText_title.getText().toString() + editText_notes.getText().toString());
+            clipboardManager.setPrimaryClip(data);
+
+            Toast.makeText(NotesTakerActivity.this,"Text copied",Toast.LENGTH_SHORT).show();
+        });
 
         notes = new Notes();
         try {
