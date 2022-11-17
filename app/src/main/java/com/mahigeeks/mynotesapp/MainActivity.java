@@ -2,6 +2,7 @@ package com.mahigeeks.mynotesapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +39,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
+    private static final Object DAYS_FOR_FLEXIBLE_UPDATE =true ;
     private SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     NotesListAdapter notesListAdapter;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     androidx.appcompat.widget.SearchView searchView;
     Notes selectedNote;
     InterstitialAd mInterstitialAd;
+    private Context context;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
