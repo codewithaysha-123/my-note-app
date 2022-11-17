@@ -47,7 +47,7 @@ public class NotesTakerActivity extends AppCompatActivity{
 
         imageButton_copy.setOnClickListener(view -> {
             ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData data = (ClipData) ClipData.newPlainText("text",editText_title.getText().toString() + editText_notes.getText().toString());
+            ClipData data = ClipData.newPlainText("text",editText_title.getText().toString() + editText_notes.getText().toString());
             clipboardManager.setPrimaryClip(data);
 
             Toast.makeText(NotesTakerActivity.this,"Text copied",Toast.LENGTH_SHORT).show();

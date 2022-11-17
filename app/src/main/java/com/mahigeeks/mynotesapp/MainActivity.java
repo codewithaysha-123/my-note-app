@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
+
+    private SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     NotesListAdapter notesListAdapter;
     List<Notes> notes = new ArrayList<>();
@@ -51,15 +53,46 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        searchView = findViewById(R.id.searchView_home);
+        recyclerView = findViewById(R.id.recycler_home);
+        fab_add = findViewById(R.id.fab_add);
         searchView = findViewById(R.id.searchView_home);
 
+        initSearchView();
+        initAdmob();
+
+        database = RoomDB.getInstance(this);
+        notes = database.mainDAO().getAll();
+        updateRecycler(notes);
+
+        fab_add.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this,NotesTakerActivity.class);
+            startActivityForResult(intent,101);
+        });
+    }
+
+    private void initSearchView() {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             updateRecycler(notes);
             swipeRefreshLayout.setRefreshing(false);
         });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return true;
+            }
+        });
+    }
 
+    private void initAdmob() {
         MobileAds.initialize(this, initializationStatus -> {
 
         });
@@ -110,36 +143,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         new Handler().postDelayed(() -> {
             if (mInterstitialAd!=null)
-            mInterstitialAd.show(MainActivity.this);
+                mInterstitialAd.show(MainActivity.this);
             else
                 Log.e("AdPending","Ad is not ready yet!");
         },10000);
-
-        recyclerView = findViewById(R.id.recycler_home);
-        fab_add = findViewById(R.id.fab_add);
-        searchView = findViewById(R.id.searchView_home);
-
-        database = RoomDB.getInstance(this);
-        notes = database.mainDAO().getAll();
-
-        fab_add.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this,NotesTakerActivity.class);
-            startActivityForResult(intent,101);
-        });
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filter(newText);
-                return true;
-            }
-        });
-
     }
 
     private void filter(String newText) {
@@ -155,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) { //This is deprecated please use the new methods
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==101){
             if (resultCode == Activity.RESULT_OK){
