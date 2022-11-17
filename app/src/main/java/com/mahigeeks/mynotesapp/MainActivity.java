@@ -37,7 +37,7 @@ import com.mahigeeks.mynotesapp.Models.Notes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
+public class MainActivity extends AppCompatActivity {
 
     private static final Object DAYS_FOR_FLEXIBLE_UPDATE =true ;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -212,40 +212,39 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
     };
 
+    @SuppressLint({"NonConstantResourceId", "NotifyDataSetChanged"})
     private void showPopup(CardView cardView) {
         PopupMenu popupMenu = new PopupMenu(this,cardView);
         popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()){
+                case R.id.pin:
+                    if (selectedNote.isPinned()){
+                        database.mainDAO().pin(selectedNote.getID(),false);
+                        Toast.makeText(MainActivity.this,"Unpinned!",Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        database.mainDAO().pin(selectedNote.getID(),true);
+                        Toast.makeText(MainActivity.this,"Pinned!",Toast.LENGTH_SHORT).show();
+                    }
+                    notes.clear();
+                    notes.addAll(database.mainDAO().getAll());
+                    notesListAdapter.notifyDataSetChanged();
+                    return true;
+
+                case R.id.delete:
+                    database.mainDAO().delete(selectedNote);
+                    notes.remove(selectedNote);
+                    notesListAdapter.notifyDataSetChanged();
+                    Toast.makeText(MainActivity.this,"Note Deleted!",Toast.LENGTH_SHORT).show();
+                    return true;
+
+                default:
+                    return false;
+            }
+        });
         popupMenu.show();
     }
 
-    @SuppressLint({"NotifyDataSetChanged", "NonConstantResourceId"})
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.pin:
-                if (selectedNote.isPinned()){
-                    database.mainDAO().pin(selectedNote.getID(),false);
-                    Toast.makeText(MainActivity.this,"Unpinned!",Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    database.mainDAO().pin(selectedNote.getID(),true);
-                    Toast.makeText(MainActivity.this,"Pinned!",Toast.LENGTH_SHORT).show();
-                }
-                notes.clear();
-                notes.addAll(database.mainDAO().getAll());
-                notesListAdapter.notifyDataSetChanged();
-                return true;
-
-            case R.id.delete:
-                database.mainDAO().delete(selectedNote);
-                notes.remove(selectedNote);
-                notesListAdapter.notifyDataSetChanged();
-                Toast.makeText(MainActivity.this,"Note Deleted!",Toast.LENGTH_SHORT).show();
-                return true;
-
-            default:
-                return false;
-        }
-    }
 }
