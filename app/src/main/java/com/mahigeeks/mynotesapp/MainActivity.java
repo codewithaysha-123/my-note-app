@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -39,7 +38,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final Object DAYS_FOR_FLEXIBLE_UPDATE =true ;
     private SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     NotesListAdapter notesListAdapter;
