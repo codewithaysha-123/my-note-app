@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="imageButton_copy" type="id">copy</item>
+    <item name="imageButton_share" type="id">share</item>
+    <item name="micButtonNotes" type="id">notes</item>
+    <item name="micButtonTitle" type="id" />
+</resources>
